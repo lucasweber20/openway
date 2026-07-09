@@ -55,7 +55,9 @@ def check_vuln(url_list):
         except:
             continue
         if req.status_code in {300, 301, 302, 303, 304, 305, 306, 307, 308}:
-            print(f"Open redirect founded: {url},{req.status_code}")
+            if args.output:
+                file_write = open(args.output, "a").write(f"{url}\n")
+            print(f"Open redirect founded: {url}")
         else:
             continue
 
