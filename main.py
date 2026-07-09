@@ -51,10 +51,10 @@ def check_vuln(url_list):
     headers = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36"}
     for url in url_list:
         try:
-            req = requests.get(url, headers=headers, timeout=10, allow_redirects=False)
+            req = requests.get(url, headers=headers, timeout=10)
         except:
             continue
-        if req.status_code in {300, 301, 302, 303, 304, 305, 306, 307, 308}:
+        if  req.history:
             if args.output:
                 file_write = open(args.output, "a").write(f"{url}\n")
             print(f"Open redirect founded: {url}")
