@@ -54,9 +54,9 @@ def check_vuln(url_list):
             req = requests.get(url, headers=headers, timeout=10)
         except:
             continue
-        if  req.history:
+        if req.history:
             if args.output:
-                file_write = open(args.output, "a").write(f"{url}\n")
+                file_write = open(args.output, "a").write(f"{url} -> {req.url}\n")
             print(f"Open redirect founded: {url}")
         else:
             continue
