@@ -38,13 +38,16 @@ def parser_urls(urls):
     result = []
     file_read = open("payloads.txt", encoding="utf-8").read().splitlines()
     for url in urls:
-        f = furl(url)
-        for payload in file_read:
-            payload = payload.replace("{domain}", f.netloc)
-            for args in f.args:
-                f.args[args] = payload
-            else:
-                result.append(unquote(f.url))
+        try:
+            f = furl(url)
+            for payload in file_read:
+                payload = payload.replace("{domain}", f.netloc)
+                for args in f.args:
+                    f.args[args] = payload
+                else:
+                    result.append(unquote(f.url))
+        except:
+            continue
     return result
 
 def check_vuln(url_list):
