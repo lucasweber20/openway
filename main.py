@@ -59,8 +59,8 @@ def check_vuln(url_list):
             continue
         if req.history:
             if args.output:
-                file_write = open(args.output, "a").write(f"{url} -> {req.url}\n")
-            print(f"Open redirect founded: {url}")
+                file_write = open(args.output, "a").write(f"{url} -> \033[92m{req.url}\033[00m\n")
+            print(f"Open redirect founded: {url} -> \033[92m{req.url}\033[00m")
         else:
             continue
 
