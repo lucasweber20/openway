@@ -2,7 +2,6 @@ import argparse
 import requests
 from furl import furl
 from urllib.parse import unquote
-import time
 
 
 parser = argparse.ArgumentParser()
@@ -17,7 +16,7 @@ def main():
     without_duplicates = remove_duplicates(args.list)
     urls_params = check_params(without_duplicates)
     urls_parsed = parser_urls(urls_params)
-    check_vuln(urls_parsed)
+    #check_vuln(urls_parsed)
 
 def remove_duplicates(file):
     file_read = open(file, encoding="utf-8").read().splitlines()
