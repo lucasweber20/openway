@@ -59,7 +59,10 @@ def parser_urls(urls):
     return result
 
 def req_thread(url):
-    req = requests.get(url, headers=HEADERS, timeout=10)
+    try:
+        req = requests.get(url, headers=HEADERS, timeout=10)
+    except:
+        pass
     if req.history:
         return True, url, req.url
 
@@ -71,7 +74,10 @@ def check_vuln(url_list, thread):
                 redirect = future.result()
                 if redirect:
                     if args.output:
-                        file_write = open(args.output, "a").write(f"{redirect[1]} -> \033[92m{redirect[2]}\033[00m\n")
+                        try:
+                            file_write = open(args.output, "a").write(f"{redirect[1]} -> \033[92m{redirect[2]}\033[00m\n")
+                        except:
+                            continue
                     print(f"Open redirect founded: {redirect[1]} -> \033[92m{redirect[2]}\033[00m")
                 else:
                     continue
@@ -83,7 +89,10 @@ def check_vuln(url_list, thread):
                 continue
             if req.history:
                     if args.output:
-                        file_write = open(args.output, "a").write(f"{url} -> \033[92m{req.url}\033[00m\n")
+                        try:
+                            file_write = open(args.output, "a").write(f"{url} -> \033[92m{req.url}\033[00m\n")
+                        except:
+                            continue
                     print(f"Open redirect founded: {url} -> \033[92m{req.url}\033[00m")
             else:
                 continue
