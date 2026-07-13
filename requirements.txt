@@ -1,5 +1,4 @@
 argparse
 requests
-concurrent.futures
 furl
 urlparse
