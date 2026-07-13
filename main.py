@@ -69,7 +69,6 @@ def check_vuln(url_list, thread):
             futures = [executor.submit(req_thread, url) for url in url_list]
             for future in concurrent.futures.as_completed(futures):
                 redirect = future.result()
-                print(redirect[1])
                 if redirect:
                     if args.output:
                         file_write = open(args.output, "a").write(f"{url} -> \033[92m{req.url}\033[00m\n")
