@@ -2,4 +2,4 @@ argparse
 requests
 concurrent.futures
 furl
-urllib.parse
+urlparse
