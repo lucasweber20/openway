@@ -65,7 +65,7 @@ def req_thread(url):
 
 def check_vuln(url_list, thread):
     if thread:
-        with concurrent.futures.ThreadPoolExecutor() as executor:
+        with concurrent.futures.ThreadPoolExecutor(max_workers=args.thread) as executor:
             futures = [executor.submit(req_thread, url) for url in url_list]
             for future in concurrent.futures.as_completed(futures):
                 redirect = future.result()
