@@ -1,22 +1,31 @@
 import argparse
 import requests
+import concurrent.futures
 from furl import furl
 from urllib.parse import unquote
 
+
+HEADERS = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36"}
 
 parser = argparse.ArgumentParser()
 
 args = parser.add_argument("-u", "--url", help='Set url, example: -u https://example.com/?param=value', type=str)
 args = parser.add_argument("-l", "--list", help="Specify file with urls, example: -l urls.txt", type=str)
 args = parser.add_argument("-o", "--output", help="Specify output file, example: -o outputs.txt")
+args = parser.add_argument("-t", "--thread", help="Specify threads number, example: -t 2", type=int)
 
 args = parser.parse_args()
 
 def main():
+
     without_duplicates = remove_duplicates(args.list)
     urls_params = check_params(without_duplicates)
     urls_parsed = parser_urls(urls_params)
-    check_vuln(urls_parsed)
+
+    if args.thread:
+        check_vuln(urls_parsed, 1)
+    else:
+        check_vuln(urls_parsed, 0)
 
 def remove_duplicates(file):
     file_read = open(file, encoding="utf-8").read().splitlines()
@@ -49,19 +58,36 @@ def parser_urls(urls):
             continue
     return result
 
-def check_vuln(url_list):
-    headers = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36"}
-    for url in url_list:
-        try:
-            req = requests.get(url, headers=headers, timeout=10)
-        except:
-            continue
-        if req.history:
-            if args.output:
-                file_write = open(args.output, "a").write(f"{url} -> \033[92m{req.url}\033[00m\n")
-            print(f"Open redirect founded: {url} -> \033[92m{req.url}\033[00m")
-        else:
-            continue
+def req_thread(url):
+    req = requests.get(url, headers=HEADERS, timeout=10)
+    if req.history:
+        return True, url, req.url
+
+def check_vuln(url_list, thread):
+    if thread:
+        with concurrent.futures.ThreadPoolExecutor() as executor:
+            futures = [executor.submit(req_thread, url) for url in url_list]
+            for future in concurrent.futures.as_completed(futures):
+                redirect = future.result()
+                print(redirect[1])
+                if redirect:
+                    if args.output:
+                        file_write = open(args.output, "a").write(f"{url} -> \033[92m{req.url}\033[00m\n")
+                    print(f"Open redirect founded: {redirect[1]} -> \033[92m{redirect[2]}\033[00m")
+                else:
+                    continue
+    else:
+        for url in url_list:
+            try:
+                req = requests.get(url, headers=HEADERS, timeout=10)
+            except:
+                continue
+            if req.history:
+                    if args.output:
+                        file_write = open(args.output, "a").write(f"{url} -> \033[92m{req.url}\033[00m\n")
+                    print(f"Open redirect founded: {url} -> \033[92m{req.url}\033[00m")
+            else:
+                continue
 
 if __name__ == "__main__":
     main()
