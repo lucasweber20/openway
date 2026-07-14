@@ -60,7 +60,6 @@ http\x3A\x2F\x2Fgoogle.com
 //google.com/%2f%2e%2e
 /google.com/%2f%2e%2e
 //google.com//%2F%2E%2E
-http://00330.00072.0000326.00000316
 http:00330.00072.0000326.00000316
 http://00330.0x3a.54990
 http:00330.0x3a.54990

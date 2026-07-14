@@ -21,11 +21,7 @@ def main():
     without_duplicates = remove_duplicates(args.list)
     urls_params = check_params(without_duplicates)
     urls_parsed = parser_urls(urls_params)
-
-    if args.thread:
-        check_vuln(urls_parsed, 1)
-    else:
-        check_vuln(urls_parsed, 0)
+    check_vuln(urls_parsed)
 
 def remove_duplicates(file):
     file_read = open(file, encoding="utf-8").read().splitlines()
@@ -66,12 +62,13 @@ def req_thread(url):
     if req.history:
         return True, url, req.url
 
-def check_vuln(url_list, thread):
-    if thread:
+def check_vuln(url_list):
+    if args.thread:
         with concurrent.futures.ThreadPoolExecutor(max_workers=args.thread) as executor:
             futures = [executor.submit(req_thread, url) for url in url_list]
             for future in concurrent.futures.as_completed(futures):
                 redirect = future.result()
+                print("teste")
                 if redirect:
                     if args.output:
                         try:
