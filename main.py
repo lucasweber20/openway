@@ -3,7 +3,6 @@ import requests
 import concurrent.futures
 from furl import furl
 from urllib.parse import unquote
-import time
 
 
 parser = argparse.ArgumentParser()
