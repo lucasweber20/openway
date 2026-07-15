@@ -16,15 +16,9 @@ args = parser.add_argument("-t", "--thread", help="Specify threads number, examp
 args = parser.parse_args()
 
 def main():
-    if args.thread and args.thread > 1:
-        threads = args.thread
-    else:
-        threads = 1
-
     without_duplicates = remove_duplicates(args.list)
     urls_params = check_params(without_duplicates)
     urls_parsed = parser_urls(urls_params)
-
     check_vuln(urls_parsed)
     
 def remove_duplicates(file):
