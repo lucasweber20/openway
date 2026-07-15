@@ -24,7 +24,6 @@ def main():
     without_duplicates = remove_duplicates(args.list)
     urls_params = check_params(without_duplicates)
 
-    print(f"Threads = {threads}")
     with concurrent.futures.ThreadPoolExecutor(max_workers=threads) as executor:
         futures = [executor.submit(parser_urls, url) for url in urls_params]
         for future in concurrent.futures.as_completed(futures):
