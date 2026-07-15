@@ -23,11 +23,7 @@ def main():
 
     without_duplicates = remove_duplicates(args.list)
     urls_params = check_params(without_duplicates)
-
-    with concurrent.futures.ThreadPoolExecutor(max_workers=threads) as executor:
-        futures = [executor.submit(parser_urls, url) for url in urls_params]
-        for future in concurrent.futures.as_completed(futures):
-            urls_parsed = future.result()
+    urls_parsed = parser_urls(urls_params)
 
     check_vuln(urls_parsed)
     
@@ -49,16 +45,17 @@ def check_params(urls):
 def parser_urls(urls):
     result = []
     file_read = open("payloads.txt", encoding="utf-8").read().splitlines()
-    try:
-        f = furl(urls)
-        for payload in file_read:
-            payload = payload.replace("{domain}", f.netloc)
-            for args in f.args:
-                f.args[args] = payload
-            else:
-                result.append(unquote(f.url))
-    except:
-        pass
+    for url in urls:
+        try:
+            f = furl(url)
+            for payload in file_read:
+                payload = payload.replace("{domain}", f.netloc)
+                for args in f.args:
+                    f.args[args] = payload
+                else:
+                    result.append(unquote(f.url))
+        except:
+            continue
     return result
 
 def requests_urls(url):
