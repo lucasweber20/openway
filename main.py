@@ -9,7 +9,7 @@ parser = argparse.ArgumentParser()
 
 args = parser.add_argument("-u", "--url", help='Set url, example: -u https://example.com/?param=value', type=str)
 args = parser.add_argument("-l", "--list", help="Specify file with urls, example: -l urls.txt", type=str)
-args = parser.add_argument("-o", "--output", help="Specify output file, example: -o outputs.txt")
+args = parser.add_argument("-o", "--output", help="Specify output file, example: -o outputs.txt", type=str)
 args = parser.add_argument("-t", "--thread", help="Specify threads number, example: -t 2", type=int)
 
 args = parser.parse_args()
@@ -61,11 +61,9 @@ def requests_urls(url):
         pass
 
 def check_vuln(url_list):
-    if args.thread and args.thread > 1:
-        threads = args.thread
-    else:
-        threads = 1
-
+    threads = 1
+    threads = args.thread if args.thread and args.thread > 1 else threads
+    
     with concurrent.futures.ThreadPoolExecutor(max_workers=threads) as executor:
         futures = [executor.submit(requests_urls, url) for url in url_list]
         for future in concurrent.futures.as_completed(futures):
