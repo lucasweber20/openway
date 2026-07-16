@@ -15,9 +15,12 @@ args = parser.add_argument("-t", "--thread", help="Specify threads number, examp
 args = parser.parse_args()
 
 def main():
-    without_duplicates = remove_duplicates(args.list)
-    urls_params = check_params(without_duplicates)
-    urls_parsed = parser_urls(urls_params)
+    if not args.url:
+        without_duplicates = remove_duplicates(args.list)
+        urls_params = check_params(without_duplicates)
+        urls_parsed = parser_urls(urls_params)
+    else:
+        urls_parsed = parser_urls(args.url.split())
     check_vuln(urls_parsed)
     
 def remove_duplicates(file):
@@ -38,6 +41,7 @@ def check_params(urls):
 def parser_urls(urls):
     result = []
     file_read = open("payloads.txt", encoding="utf-8").read().splitlines()
+    print(urls)
     for url in urls:
         try:
             f = furl(url)
