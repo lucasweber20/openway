@@ -1,4 +1,4 @@
 argparse
 requests
 furl
-urlparse
+urllib3
