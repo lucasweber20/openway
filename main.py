@@ -82,7 +82,6 @@ def check_vuln(url_list):
                             continue
                     print(f"Open redirect founded: {redirect[1]} -> \033[92m{redirect[2]}\033[00m")
             else:
-                print("nada")
                 continue
 
 if __name__ == "__main__":
