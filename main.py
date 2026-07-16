@@ -41,7 +41,6 @@ def check_params(urls):
 def parser_urls(urls):
     result = []
     file_read = open("payloads.txt", encoding="utf-8").read().splitlines()
-    print(urls)
     for url in urls:
         try:
             f = furl(url)
