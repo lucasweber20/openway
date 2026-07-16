@@ -73,14 +73,16 @@ def check_vuln(url_list):
         futures = [executor.submit(requests_urls, url) for url in url_list]
         for future in concurrent.futures.as_completed(futures):
             redirect = future.result()
-            if redirect and "google.com" in redirect[2] or "www.google.com" in redirect[2]:
-                if args.output:
-                    try:
-                        file_write = open(args.output, "a").write(f"{redirect[1]} -> \033[92m{redirect[2]}\033[00m\n")
-                    except:
-                        continue
-                print(f"Open redirect founded: {redirect[1]} -> \033[92m{redirect[2]}\033[00m")
+            if redirect:
+                if "google.com" == redirect[2] or "www.google.com" == redirect[2]:
+                    if args.output:
+                        try:
+                            file_write = open(args.output, "a").write(f"{redirect[1]} -> \033[92m{redirect[2]}\033[00m\n")
+                        except:
+                            continue
+                    print(f"Open redirect founded: {redirect[1]} -> \033[92m{redirect[2]}\033[00m")
             else:
+                print("nada")
                 continue
 
 if __name__ == "__main__":
