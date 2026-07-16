@@ -58,8 +58,10 @@ def requests_urls(url):
     headers = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36"}
     try:
         req = requests.get(url, headers=headers, timeout=10)
+        f = furl(req.url)
+        netloc = f.netloc
         if req.history:
-            return True, url, req.url
+            return True, url, netloc
     except:
         pass
 
@@ -71,7 +73,7 @@ def check_vuln(url_list):
         futures = [executor.submit(requests_urls, url) for url in url_list]
         for future in concurrent.futures.as_completed(futures):
             redirect = future.result()
-            if redirect:
+            if redirect and "google.com" in redirect[2] or "www.google.com" in redirect[2]:
                 if args.output:
                     try:
                         file_write = open(args.output, "a").write(f"{redirect[1]} -> \033[92m{redirect[2]}\033[00m\n")
