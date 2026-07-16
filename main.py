@@ -16,11 +16,15 @@ args = parser.parse_args()
 
 def main():
     if not args.url:
+        print("Removendo duplicatas")
         without_duplicates = remove_duplicates(args.list)
+        print("Verificando parametros")
         urls_params = check_params(without_duplicates)
+        print("Analisando us")
         urls_parsed = parser_urls(urls_params)
     else:
         urls_parsed = parser_urls(args.url.split())
+    print("Procurando vulns")
     check_vuln(urls_parsed)
     
 def remove_duplicates(file):
